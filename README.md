@@ -1,5 +1,9 @@
 # Python Scraping Engineering Task
 
+## Task
+
+---
+
 ### Task description
 
 - Create a simple API that will expose one endpoint called /scrape
@@ -37,6 +41,10 @@
 
 - Once the task is finished, please book a slot using this link and make sure to send your task to
   tamara@reviewshake.com at least 24 hours before the booked time.
+
+# Solution
+
+---
 
 ### Description
 
