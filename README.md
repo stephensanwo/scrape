@@ -2,7 +2,7 @@
 
 ## Task
 
----
+-
 
 ### Task description
 
@@ -44,24 +44,24 @@
 
 # Solution
 
----
+-
 
 ### Description
 
-Audio File API, is an API that manages the file metadata of an Audio File Server
+Scrape: A simple python API to scrape the HTML of any url
 
-Three audio file types are supported:
+### App Structure:
 
-- Song
-- Podcast
-- Audiobook
+- api: src files
+- test: application tests
+- docs: OpenAPI documentation
+- main: server entry file
 
-### Built with:
+### Tools and Frameworks:
 
 - Python 3.8
-- Flask 1.1.2
-- MongoDB
-- Docker
+- FastAPI
+- Uvicorn
 - See full list of dependencies in requirements.txt
 
 ## Installation (Development):
