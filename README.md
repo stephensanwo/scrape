@@ -2,11 +2,10 @@
 
 ## Solution
 
--
-
 ### Description
 
 Scrape: A simple python API to scrape the HTML of any url
+See Github Repo (https://github.com/stephensanwo/scrape)
 
 Assumptions:
 
