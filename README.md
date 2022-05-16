@@ -1,48 +1,6 @@
 # Python Scraping Engineering Task
 
-## Task
-
--
-
-### Task description
-
-- Create a simple API that will expose one endpoint called /scrape
-
-- This endpoint will accept four parameters:
-
-  - url: str - URL to scrape [required]
-  - headers: dict - custom headers [optional]
-  - cookies: dict - custom cookies [optional]
-  - payload: dict - Data payload (type: application/json) [optional]
-
-- This API will take the URL from the endpoint parameters and make the request using HTTP library (async)
-
-  - Users can pass custom headers. If these are not present, use default headers
-  - Users can pass custom cookies. If these are not present, do not pass cookies
-
-- Support both GET and POST methods
-
-- The API response is the HTML body of the HTTP response
-
-- You can use http://httpbin.org/ website to test your solution
-
-### Requirements
-
-- Python 3.6+
-- FastAPI framework
-
-### Delivery
-
-- Take this as an opportunity to showcase your skills! Any additional functionality is very
-  welcomed. However, make sure to allocate no more than 4 hours to implement this task.
-
-- Include README.md file with instructions on how to start the application and expose API
-  documentation (feel free to use auto-generated FastAPI documentation).
-
-- Once the task is finished, please book a slot using this link and make sure to send your task to
-  tamara@reviewshake.com at least 24 hours before the booked time.
-
-# Solution
+## Solution
 
 -
 
@@ -50,12 +8,25 @@
 
 Scrape: A simple python API to scrape the HTML of any url
 
+Assumptions:
+
+The problem statement requires that the scrape endpoint(/scrape) support GET and POST requests, while also accepting parameters within the body of the HTTP request; headers (dict), cookies (dict), payload (dict).
+
+I thought of 3 ways to handle this requirement, and implemented number 3
+
+1. Create a single POST endpoint and add an additional parameter for the user to indicate if the request to the provided url is a POST or GET request. The aiohttp session will be POST or GET to the provided url, depending on the user input.
+
+2. Create a single POST endpoint and make assumptions that requests without a payload will be GET requests and requests with payloads will be POST requests.
+
+3. [SELECTED OPTION] Create the /scrape endpoint to support POST and GET requests, for the GET request, since we should not send a request body to the GET request (https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/GET), the /scrape endpoint will fetch the HTML and return it to the user, while the POST endpoint will accept all the optional parameters provided by the user.
+
 ### App Structure:
 
-- api: src files
-- test: application tests
+- api: src files, routes and schema
 - docs: OpenAPI documentation
-- main: server entry file
+- main.py: server entry file
+- requirements.txt: requirements file
+- test_main.py: application test file
 
 ### Tools and Frameworks:
 
@@ -64,18 +35,11 @@ Scrape: A simple python API to scrape the HTML of any url
 - Uvicorn
 - See full list of dependencies in requirements.txt
 
-## Installation (Development):
+### Installation (Development):
 
-- clone the repository
+- cd scrape/
 
-  ```
-  git clone https://github.com/stephensanwo/Filed-Audio-Server.git
-
-  ```
-
-- cd projectname/
-
-- Create a virtual environment
+- Create a virtual environment (python 3.8)
 
   ```
   python3.8 -m venv env
@@ -96,134 +60,28 @@ Scrape: A simple python API to scrape the HTML of any url
 - Run the application
 
   ```
-  flask run
+  python main.py
   ```
 
-- The application will run on localhost://7000
+- Open the FastAPI swagger documentation on localhost://7001
 
-## Features:
-
-### Application Security:
-
-An API Key is created for the API using the api-credentials CLI tool in development. An API Key is required on specific routes. See URL endpoints below for details <b>remove the require_api decorator on routes to disbale application security in development</b>
-
-To generate an API. in the CLI, run:
+### Tests:
 
 ```
-python api-credentials.py john.doe@email.com
+pytest -v --cov
 ```
 
-### Application Monitoring
+### URL endpoints:
 
-Warning and Error logs are collected and stored in request-logs.log file for application monitoring. Typical flags monitored include:
+| URL Endpoint | HTTP Methods | Summary                                                                                               |
+| ------------ | ------------ | ----------------------------------------------------------------------------------------------------- |
+| `scrape`     | `POST`       | Request the API to send POST request to the provided url, providing the headers, cookies, and payload |
+| `scrape`     | `GET`        | Request the API to send a simple GET request to the provided url                                      |
 
-- Database connection offline, or Internal server errors
-- Unauthorized user trying to access a restricted route (provides the IP)
+### Documentation and Examples
 
-### URL endpoints
+See documentation at: http://localhost:7001/docs
 
-| URL Endpoint                                                                        | HTTP Methods | Summary                                                                       |
-| ----------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------- |
-| `api/create`                                                                        | `POST`       | Creates a new Audio File Record                                               |
-| `api/get_audio_files?audioFileType=<audioFileType>`                                 | `GET`        | Retrieves all Audio Files for a specific file type (song, podcast, audiobook) |
-| `api/get_audio_file?audioFileType=<audioFileType>&audioFileID=<audioFileID>`        | `GET`        | Retrieves a specific Audio File by file type and file ID                      |
-| `/api/v1/update_audio_file?audioFileType=<audioFileType>&audioFileID=<audioFileID>` | `POST`       | Updates the Audio File by file ID and file type                               |
-| `/api/v1/delete_audio_file?audioFileType=<audioFileType>&audioFileID=<audioFileID>` | `POST`       | Deletes specific Audio File by file type and file ID                          |
-
-#### Example Request Metadata -> Create New Song
-
-```
-Example body
-{
-    "audioFileType": "song",
-    "audioFileMetadata": {
-        "name_of_song": "Paradise, Coldplay",
-        "duration": 40
-    }
-}
-```
-
-#### Example -> Create New Podcast
-
-```
-{
-    "audioFileType": "podcast",
-    "audioFileMetadata": {
-        "name_of_podcast": "All In Podcast",
-        "duration": 1909,
-        "host": "Jason Calacanis",
-        "participants": ["Chamath Palihapitiya", "Davis Sacks","David Friedberg"]
-    }
-}
-```
-
-#### Example -> Create New Podcast
-
-```
-{
-    "audioFileType": "podcast",
-    "audioFileMetadata": {
-        "name_of_podcast": "All In Podcast",
-        "duration": 1909,
-        "host": "Jason Calacanis",
-        "participants": ["Chamath Palihapitiya", "Davis Sacks","David Friedberg"]
-    }
-}
-```
-
-#### Example -> Create New Audiobook
-
-```
-{
-    "audioFileType": "audiobook",
-    "audioFileMetadata": {
-        "title_of_audiobook": "Born a Crime",
-        "author_of_title": "Trevor Noah",
-        "narrator": "Trevor Noah",
-        "duration": 390492
-    }
-}
-```
-
-See further documentation in docs/,
-
-### Application Testing:
-
-In the project root, run:
-
-```
-python3.8 test.py
-```
-
-## Deployement (Docker Compose, Nginx Web Server, uWSGI Application Server)
-
-In terminal, with docker installed run:
-
-```
-  docker-compose build
-  docker-compose up
-```
-
-Create API Credentials in Production
-
-cd into the API container
-
-```
-docker exec -it api bash
-```
-
-exceute the API Credentials CLI command
-
-```
-python3.8 api-credentials.py john.doe@email.com
-```
-
-## Todos
-
-## License
-
-MIT
-
-## Author
+### Author
 
 [Stephen Sanwo](https://github.com/stephensanwo)

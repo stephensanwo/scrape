@@ -4,24 +4,20 @@ from fastapi.openapi.utils import get_openapi
 
 def my_schema(server):
     openapi_schema = get_openapi(
-        title="Wager-Core API Documentation and Specifications",
+        title="Python Scraping Engineering Task",
         version="1.0",
         routes=server.routes,
     )
     openapi_schema["info"] = {
-        "title": "Wager-Core API Documentation and Specifications",
+        "title": "Python Scraping Engineering Task",
         "version": "1.0",
-        "description": "Wager-Core API Documentation and Specifications",
-        "termsOfService": "/",
+        "description": "Python Scraping Engineering Task",
         "contact": {
-            "name": "Get Help with this API",
-            "url": "/",
+            "name": "Stephen Sanwo",
+            "url": "https://www.stephensanwo.dev",
             "email": "stephen.sanwo@icloud.com"
         },
-        "license": {
-            "name": "Copyrights - Wager",
-            "url": ""
-        },
+
     }
     server.openapi_schema = openapi_schema
     return server.openapi_schema
